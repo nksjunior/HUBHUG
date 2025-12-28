@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>คำทำนายจากโชคชะตา</title>
+<title>Hug(ฮัก)Fest</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
 
@@ -30,7 +30,7 @@ body {
 
 /* ไฟแคมป์ */
 body::after {
-  content: "✦ ✦ ✦ ✦ ✦";
+  content: "✦ ✦ ✦ ✦ ✦  ✦  ✦";
   position: fixed;
   top: 14px;
   width: 100%;
@@ -124,6 +124,17 @@ body::after {
   100% { transform: translateY(0); }
 }
 
+.little-characters {
+  position: fixed;
+  bottom: 12px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
 .back {
   margin-top: 22px;
   font-size: 14px;
@@ -135,13 +146,20 @@ body::after {
 
 <body>
 
+<div class="little-characters">
+  <span class="char">🐥</span>
+  <span class="char c2">💗</span>
+  <span class="char c3">✨</span>
+  <span class="char c4">🔮</span>
+</div>
+
 <div class="container">
 
   <!-- หน้าเลือกการ์ด -->
   <div id="selectPage">
     <div class="header">
-      <h2>คำทำนายจากโชคชะตา</h2>
-      <p>อบอุ่นเหมือนแคมป์ไฟ ดูดวงแบบขำ ๆ</p>
+      <h2>✨ เลขแห่งดวงชะตา 💘 </h2>
+      <p> Hug(ฮัก)Fest 💗 </p>
     </div>
 
     <div class="grid">
@@ -160,11 +178,11 @@ body::after {
   <!-- หน้าผลลัพธ์ -->
   <div id="resultPage" class="hidden">
     <div class="result-title" id="cardTitle"></div>
-    <div class="result-sub">คำทำนายจากโชคชะตา</div>
+    <div class="result-sub">🫶 คำทำนายจากโชคชะตา 💌</div>
 
     <div class="result-box" id="cardText"></div>
 
-    <div class="mascot">🔮🐥✨</div>
+    <div class="mascot">🔮🧙‍♀️✨</div>
 
     <div class="back" onclick="goBack()">← เลือกการ์ดใหม่</div>
   </div>
