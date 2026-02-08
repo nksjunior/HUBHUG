@@ -49,15 +49,23 @@
       padding:22px;
     }
 
+    /* ADMIN layout */
     .app{
       width:min(980px, 100%);
       display:grid;
       grid-template-columns: 1.1fr .9fr;
       gap:18px;
     }
-
     @media (max-width: 900px){
       .app{grid-template-columns:1fr; gap:16px;}
+    }
+
+    /* USER layout */
+    .wrap{
+      width:min(720px, 100%);
+      display:flex;
+      flex-direction:column;
+      gap:14px;
     }
 
     .panel{
@@ -102,13 +110,13 @@
       color:var(--muted);
     }
 
+    /* ADMIN card grid */
     .grid{
       display:grid;
       grid-template-columns: repeat(5, 1fr);
       gap:10px;
       margin-top:12px;
     }
-
     @media (max-width: 900px){
       .grid{grid-template-columns: repeat(6, 1fr);}
     }
@@ -152,6 +160,7 @@
       font-size:16px;
     }
 
+    /* RESULT CARD */
     .resultWrap{
       display:flex;
       flex-direction:column;
@@ -219,6 +228,7 @@
       display:flex;
       gap:10px;
       flex-wrap:wrap;
+      justify-content:center;
     }
 
     button.action{
@@ -247,6 +257,24 @@
       font-size:12px;
       color:var(--muted2);
       margin:0;
+      text-align:center;
+    }
+
+    .errorBox{
+      text-align:center;
+      padding:26px 16px;
+    }
+
+    .errorBox h2{
+      margin:0 0 8px 0;
+      font-size:18px;
+    }
+
+    .errorBox p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
     }
 
     .hidden{display:none !important;}
@@ -254,16 +282,17 @@
 </head>
 
 <body>
-  <div class="app">
 
-    <!-- LEFT: เลือกการ์ด -->
+  <!-- ADMIN VIEW -->
+  <div class="app hidden" id="adminApp">
+
     <section class="panel" id="pickerPanel">
       <div class="brand">
         <div class="logo">
           <div class="dot"></div>
           <div>
-            <h1>HUBHUG</h1>
-            <p class="sub">เลือกการ์ด หรือสแกน QR เพื่อเปิดคำทำนายเฉพาะใบ</p>
+            <h1>HUBHUG (Admin)</h1>
+            <p class="sub">เลือกการ์ดเพื่อเทสระบบ (คนร่วมกิจกรรมจะไม่เห็นหน้านี้)</p>
           </div>
         </div>
         <div style="text-align:right">
@@ -274,67 +303,91 @@
       <div class="grid" id="cardGrid"></div>
 
       <p class="small" style="margin-top:14px;">
-        ถ้าคุณเข้าผ่าน QR ระบบจะเปิดคำทำนายให้ทันทีโดยอัตโนมัติ
+        โหมดนี้เข้าได้เฉพาะลิงก์ <b>?admin=1</b>
       </p>
     </section>
 
-    <!-- RIGHT: ผลลัพธ์ -->
     <section class="panel">
       <div class="resultWrap">
-        <div class="resultCard" id="captureArea">
-          <div class="badge" id="badge">
-            🔮 คำทำนายของคุณ
-          </div>
-
-          <h2 class="title" id="resultTitle">ยังไม่ได้เลือกการ์ด</h2>
-          <p class="prediction" id="predictionText">เลือกการ์ดทางซ้าย หรือสแกน QR Code</p>
-
-          <p class="hint" id="hintText">
-            กด “เซฟเป็นรูป” เพื่อแชร์ลง IG Story / TikTok / LINE ได้เลย
-          </p>
-
+        <div class="resultCard" id="captureAreaAdmin">
+          <div class="badge">🔮 คำทำนายของคุณ</div>
+          <h2 class="title" id="resultTitleAdmin">ยังไม่ได้เลือกการ์ด</h2>
+          <p class="prediction" id="predictionTextAdmin">เลือกการ์ดทางซ้าย</p>
+          <p class="hint">กด “เซฟเป็นรูป” เพื่อแชร์ลง IG Story / TikTok / LINE ได้เลย</p>
           <div class="footerTag">
-            <span id="footerLeft">HUBHUG • QR Fortune</span>
-            <span id="footerRight">#HUBHUG</span>
+            <span>HUBHUG • QR Fortune</span>
+            <span>#HUBHUG</span>
           </div>
         </div>
 
         <div class="actions">
-          <button class="action primary" id="saveBtn">📸 เซฟเป็นรูป</button>
-          <button class="action" id="copyLinkBtn">🔗 คัดลอกลิงก์ใบนี้</button>
-          <button class="action" id="randomBtn">🎲 สุ่มใหม่</button>
-          <button class="action" id="resetBtn">↩️ กลับหน้าเลือก</button>
+          <button class="action primary" id="saveBtnAdmin">📸 เซฟเป็นรูป</button>
+          <button class="action" id="copyLinkBtnAdmin">🔗 คัดลอกลิงก์ใบนี้</button>
+          <button class="action" id="randomBtnAdmin">🎲 สุ่มใหม่</button>
         </div>
 
-        <p class="small" id="statusText"></p>
+        <p class="small" id="statusTextAdmin"></p>
       </div>
     </section>
 
   </div>
 
+  <!-- USER VIEW -->
+  <div class="wrap hidden" id="userApp">
+
+    <section class="panel">
+      <div class="brand">
+        <div class="logo">
+          <div class="dot"></div>
+          <div>
+            <h1>HUBHUG</h1>
+            <p class="sub">สแกน QR เพื่อรับคำทำนายของคุณ</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+
+      <div id="resultView" class="hidden">
+        <div class="resultCard" id="captureArea">
+          <div class="badge">🔮 คำทำนายของคุณ</div>
+          <h2 class="title" id="resultTitle">คำทำนาย</h2>
+          <p class="prediction" id="predictionText">...</p>
+          <p class="hint">กด “เซฟเป็นรูป” เพื่อแชร์ลง IG Story / TikTok / LINE ได้เลย</p>
+          <div class="footerTag">
+            <span>HUBHUG • QR Fortune</span>
+            <span>#HUBHUG</span>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top:12px;">
+          <button class="action primary" id="saveBtn">📸 เซฟเป็นรูป</button>
+          <button class="action" id="copyLinkBtn">🔗 คัดลอกลิงก์</button>
+        </div>
+
+        <p class="small" id="statusText"></p>
+      </div>
+
+      <div id="errorView" class="errorBox hidden">
+        <h2>ไม่พบคำทำนาย</h2>
+        <p>
+          กรุณาสแกน QR Code ใหม่อีกครั้ง<br/>
+          (ลิงก์นี้ใช้ได้เฉพาะตอนสแกนจาก QR เท่านั้น)
+        </p>
+      </div>
+
+    </section>
+  </div>
+
   <script>
-    // ====== ตั้งค่าคำทำนาย (ตอนนี้เป็น placeholder) ======
+    // ====== Placeholder 30 คำทำนาย ======
     const predictions = Array.from({ length: 30 }, (_, i) => {
       const n = String(i + 1).padStart(2, "0");
       return `Prediction${n}`;
     });
 
-    // ====== DOM ======
-    const cardGrid = document.getElementById("cardGrid");
-    const pickerPanel = document.getElementById("pickerPanel");
-
-    const resultTitle = document.getElementById("resultTitle");
-    const predictionText = document.getElementById("predictionText");
-    const statusText = document.getElementById("statusText");
-
-    const saveBtn = document.getElementById("saveBtn");
-    const copyLinkBtn = document.getElementById("copyLinkBtn");
-    const randomBtn = document.getElementById("randomBtn");
-    const resetBtn = document.getElementById("resetBtn");
-
-    const captureArea = document.getElementById("captureArea");
-
-    // ====== Utilities ======
+    // ====== Utils ======
     function clampId(id){
       const n = Number(id);
       if (!Number.isFinite(n)) return null;
@@ -342,37 +395,27 @@
       return n;
     }
 
-    function getIdFromURL(){
+    function getParams(){
       const url = new URL(window.location.href);
-      const id = url.searchParams.get("id");
-      return clampId(id);
+      return {
+        id: clampId(url.searchParams.get("id")),
+        admin: url.searchParams.get("admin") === "1"
+      };
     }
 
     function setURLId(id){
       const url = new URL(window.location.href);
       url.searchParams.set("id", String(id));
-      window.history.replaceState({}, "", url.toString());
-    }
-
-    function clearURLId(){
-      const url = new URL(window.location.href);
-      url.searchParams.delete("id");
+      // คง admin=1 ไว้ถ้ามี
       window.history.replaceState({}, "", url.toString());
     }
 
     function currentShareURL(){
-      const url = new URL(window.location.href);
-      return url.toString();
+      return new URL(window.location.href).toString();
     }
 
-    function showStatus(msg){
-      statusText.textContent = msg || "";
-    }
-
-    // ====== Analytics helper ======
+    // ====== Analytics ======
     function trackPredictionView(id){
-      // page_view จะถูกส่งโดย GA4 อัตโนมัติอยู่แล้ว
-      // แต่เราส่ง event เพิ่ม เพื่อทำ report แยกตาม id ได้ง่าย
       if (typeof gtag === "function"){
         gtag("event", "prediction_view", {
           prediction_id: id,
@@ -389,136 +432,227 @@
       }
     }
 
-    // ====== Render card grid ======
-    function renderCards(){
-      cardGrid.innerHTML = "";
-      for (let i = 1; i <= 30; i++){
-        const btn = document.createElement("button");
-        btn.className = "cardBtn";
-        btn.type = "button";
-        btn.setAttribute("aria-label", `การ์ดใบที่ ${i}`);
+    // ====== USER MODE ======
+    function initUserMode(id){
+      const userApp = document.getElementById("userApp");
+      userApp.classList.remove("hidden");
 
-        btn.innerHTML = `
-          <div class="icon">✨</div>
-          <div class="num">#${String(i).padStart(2, "0")}</div>
-        `;
+      const resultView = document.getElementById("resultView");
+      const errorView = document.getElementById("errorView");
 
-        btn.addEventListener("click", () => openPrediction(i, true));
-        cardGrid.appendChild(btn);
+      const resultTitle = document.getElementById("resultTitle");
+      const predictionText = document.getElementById("predictionText");
+      const statusText = document.getElementById("statusText");
+
+      const saveBtn = document.getElementById("saveBtn");
+      const copyLinkBtn = document.getElementById("copyLinkBtn");
+      const captureArea = document.getElementById("captureArea");
+
+      let activeId = null;
+
+      function showStatus(msg){
+        statusText.textContent = msg || "";
+      }
+
+      function showPrediction(pid){
+        activeId = pid;
+        resultTitle.textContent = `คำทำนายใบที่ ${String(pid).padStart(2, "0")}`;
+        predictionText.textContent = predictions[pid - 1];
+
+        errorView.classList.add("hidden");
+        resultView.classList.remove("hidden");
+
+        trackPredictionView(pid);
+      }
+
+      function showError(){
+        activeId = null;
+        resultView.classList.add("hidden");
+        errorView.classList.remove("hidden");
+        trackAction("invalid_entry", null);
+      }
+
+      async function saveAsImage(){
+        if (!activeId){
+          showStatus("ยังไม่มีคำทำนายให้เซฟ");
+          return;
+        }
+
+        showStatus("กำลังสร้างรูป...");
+
+        try{
+          const canvas = await html2canvas(captureArea, {
+            backgroundColor: null,
+            scale: 2,
+            useCORS: true
+          });
+
+          const dataURL = canvas.toDataURL("image/png");
+          const a = document.createElement("a");
+          a.href = dataURL;
+          a.download = `HUBHUG_Prediction_${String(activeId).padStart(2, "0")}.png`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+
+          trackAction("save_image", activeId);
+          showStatus("เซฟรูปเรียบร้อย ✅");
+        }catch(err){
+          console.error(err);
+          showStatus("เซฟรูปไม่สำเร็จ ลองใหม่อีกครั้ง");
+        }
+      }
+
+      async function copyLink(){
+        if (!activeId){
+          showStatus("ยังไม่มีลิงก์");
+          return;
+        }
+
+        try{
+          await navigator.clipboard.writeText(currentShareURL());
+          trackAction("copy_link", activeId);
+          showStatus("คัดลอกลิงก์แล้ว ✅");
+        }catch{
+          showStatus("คัดลอกไม่ได้ (เบราว์เซอร์ไม่รองรับ)");
+        }
+      }
+
+      saveBtn.addEventListener("click", saveAsImage);
+      copyLinkBtn.addEventListener("click", copyLink);
+
+      if (id){
+        showPrediction(id);
+      }else{
+        showError();
       }
     }
 
-    // ====== Main: open prediction ======
-    let activeId = null;
+    // ====== ADMIN MODE ======
+    function initAdminMode(){
+      const adminApp = document.getElementById("adminApp");
+      adminApp.classList.remove("hidden");
 
-    function openPrediction(id, userClick=false){
-      const safeId = clampId(id);
-      if (!safeId) return;
+      const cardGrid = document.getElementById("cardGrid");
 
-      activeId = safeId;
-      const text = predictions[safeId - 1];
+      const resultTitle = document.getElementById("resultTitleAdmin");
+      const predictionText = document.getElementById("predictionTextAdmin");
+      const statusText = document.getElementById("statusTextAdmin");
 
-      resultTitle.textContent = `คำทำนายใบที่ ${String(safeId).padStart(2, "0")}`;
-      predictionText.textContent = text;
+      const saveBtn = document.getElementById("saveBtnAdmin");
+      const copyLinkBtn = document.getElementById("copyLinkBtnAdmin");
+      const randomBtn = document.getElementById("randomBtnAdmin");
+      const captureArea = document.getElementById("captureAreaAdmin");
 
-      // set URL for QR/link
-      setURLId(safeId);
+      let activeId = null;
 
-      // ซ่อน panel เลือกการ์ดบนมือถือเพื่อให้เห็นผลชัด ๆ
-      if (window.innerWidth <= 900){
-        pickerPanel.classList.add("hidden");
+      function showStatus(msg){
+        statusText.textContent = msg || "";
       }
 
-      // Analytics
-      trackPredictionView(safeId);
-      if (userClick) trackAction("pick_card", safeId);
+      function renderCards(){
+        cardGrid.innerHTML = "";
+        for (let i = 1; i <= 30; i++){
+          const btn = document.createElement("button");
+          btn.className = "cardBtn";
+          btn.type = "button";
 
-      showStatus("");
-    }
+          btn.innerHTML = `
+            <div class="icon">✨</div>
+            <div class="num">#${String(i).padStart(2, "0")}</div>
+          `;
 
-    function resetToPicker(){
-      activeId = null;
-      clearURLId();
-
-      resultTitle.textContent = "ยังไม่ได้เลือกการ์ด";
-      predictionText.textContent = "เลือกการ์ดทางซ้าย หรือสแกน QR Code";
-      pickerPanel.classList.remove("hidden");
-
-      trackAction("reset_to_picker", null);
-      showStatus("");
-    }
-
-    // ====== Save as image ======
-    async function saveAsImage(){
-      if (!activeId){
-        showStatus("ยังไม่มีคำทำนายให้เซฟ กรุณาเลือกการ์ดก่อน");
-        return;
+          btn.addEventListener("click", () => openPrediction(i, true));
+          cardGrid.appendChild(btn);
+        }
       }
 
-      showStatus("กำลังสร้างรูป...");
+      function openPrediction(id, userClick=false){
+        activeId = id;
 
-      try{
-        // ปรับให้ได้รูปคม ๆ
-        const canvas = await html2canvas(captureArea, {
-          backgroundColor: null,
-          scale: 2,
-          useCORS: true
-        });
+        resultTitle.textContent = `คำทำนายใบที่ ${String(id).padStart(2, "0")}`;
+        predictionText.textContent = predictions[id - 1];
 
-        const dataURL = canvas.toDataURL("image/png");
-        const a = document.createElement("a");
-        a.href = dataURL;
-        a.download = `HUBHUG_Prediction_${String(activeId).padStart(2, "0")}.png`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+        // set URL for easy copy
+        setURLId(id);
 
-        trackAction("save_image", activeId);
-        showStatus("เซฟรูปเรียบร้อย ✅");
-      }catch(err){
-        console.error(err);
-        showStatus("เซฟรูปไม่สำเร็จ ลองใหม่อีกครั้ง");
-      }
-    }
+        trackPredictionView(id);
+        if (userClick) trackAction("pick_card_admin", id);
 
-    // ====== Copy link ======
-    async function copyLink(){
-      if (!activeId){
-        showStatus("ยังไม่มีลิงก์เฉพาะใบ กรุณาเลือกการ์ดก่อน");
-        return;
+        showStatus("");
       }
 
-      try{
-        await navigator.clipboard.writeText(currentShareURL());
-        trackAction("copy_link", activeId);
-        showStatus("คัดลอกลิงก์แล้ว ✅");
-      }catch{
-        showStatus("คัดลอกไม่ได้ (เบราว์เซอร์ไม่รองรับ)");
+      async function saveAsImage(){
+        if (!activeId){
+          showStatus("ยังไม่มีคำทำนายให้เซฟ กรุณาเลือกการ์ดก่อน");
+          return;
+        }
+
+        showStatus("กำลังสร้างรูป...");
+
+        try{
+          const canvas = await html2canvas(captureArea, {
+            backgroundColor: null,
+            scale: 2,
+            useCORS: true
+          });
+
+          const dataURL = canvas.toDataURL("image/png");
+          const a = document.createElement("a");
+          a.href = dataURL;
+          a.download = `HUBHUG_Prediction_${String(activeId).padStart(2, "0")}.png`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+
+          trackAction("save_image_admin", activeId);
+          showStatus("เซฟรูปเรียบร้อย ✅");
+        }catch(err){
+          console.error(err);
+          showStatus("เซฟรูปไม่สำเร็จ ลองใหม่อีกครั้ง");
+        }
       }
+
+      async function copyLink(){
+        if (!activeId){
+          showStatus("ยังไม่มีลิงก์ กรุณาเลือกการ์ดก่อน");
+          return;
+        }
+
+        try{
+          // ลิงก์สำหรับผู้ร่วมกิจกรรม ไม่ต้องมี admin=1
+          const url = new URL(window.location.href);
+          url.searchParams.delete("admin");
+          url.searchParams.set("id", String(activeId));
+
+          await navigator.clipboard.writeText(url.toString());
+          trackAction("copy_link_admin", activeId);
+          showStatus("คัดลอกลิงก์แล้ว ✅");
+        }catch{
+          showStatus("คัดลอกไม่ได้ (เบราว์เซอร์ไม่รองรับ)");
+        }
+      }
+
+      function randomPick(){
+        const id = Math.floor(Math.random() * 30) + 1;
+        openPrediction(id, true);
+        trackAction("random_pick_admin", id);
+      }
+
+      saveBtn.addEventListener("click", saveAsImage);
+      copyLinkBtn.addEventListener("click", copyLink);
+      randomBtn.addEventListener("click", randomPick);
+
+      renderCards();
     }
 
-    // ====== Random ======
-    function randomPick(){
-      const id = Math.floor(Math.random() * 30) + 1;
-      openPrediction(id, true);
-      trackAction("random_pick", id);
-    }
+    // ====== INIT ======
+    const { id, admin } = getParams();
 
-    // ====== Bind events ======
-    saveBtn.addEventListener("click", saveAsImage);
-    copyLinkBtn.addEventListener("click", copyLink);
-    randomBtn.addEventListener("click", randomPick);
-    resetBtn.addEventListener("click", resetToPicker);
-
-    // ====== Init ======
-    renderCards();
-
-    // ถ้ามี id ใน URL (สแกน QR มา) ให้เปิดทันที
-    const idFromURL = getIdFromURL();
-    if (idFromURL){
-      openPrediction(idFromURL, false);
+    if (admin){
+      initAdminMode();
     }else{
-      resetToPicker();
+      initUserMode(id);
     }
   </script>
 </body>
