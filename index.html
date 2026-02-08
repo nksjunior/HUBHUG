@@ -1,454 +1,525 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>HUBHUG</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HUBHUG | คำทำนาย</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GB86JEEHNY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GB86JEEHNY');
+  </script>
 
-<style>
-* { box-sizing: border-box; }
+  <!-- html2canvas: ใช้ทำปุ่มเซฟรูป -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-body {
-  margin: 0;
-  font-family: "Prompt", sans-serif;
-  color: #5b3a28;
-  background:
-    radial-gradient(circle at top, #fff7ea, #f1dfc8 70%),
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,0.4),
-      rgba(255,255,255,0.4) 2px,
-      transparent 2px,
-      transparent 6px
-    );
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-}
+  <style>
+    :root{
+      --bg1:#0b0b12;
+      --bg2:#15152a;
+      --card:#1f1f35;
+      --card2:#262646;
+      --text:#ffffff;
+      --muted:rgba(255,255,255,.72);
+      --muted2:rgba(255,255,255,.55);
+      --accent:#ff4fd8;
+      --accent2:#7c4dff;
+      --shadow: 0 20px 70px rgba(0,0,0,.45);
+      --radius: 22px;
+    }
 
-/* ไฟแคมป์ */
-body::after {
-  content: "✦ ✦ ✦ ✦ ✦ ✦ ✦";
-  position: fixed;
-  top: 14px;
-  width: 100%;
-  text-align: center;
-  letter-spacing: 14px;
-  font-size: 14px;
-  color: #f6c56f;
-  opacity: 0.7;
-}
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(1200px 800px at 20% 15%, rgba(255,79,216,.18), transparent 55%),
+        radial-gradient(1200px 800px at 80% 20%, rgba(124,77,255,.22), transparent 55%),
+        radial-gradient(1200px 800px at 40% 90%, rgba(0,255,204,.10), transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+    }
 
-.container {
-  width: 100%;
-  max-width: 420px;
-  padding: 24px 16px 40px;
-  text-align: center;
-}
+    .app{
+      width:min(980px, 100%);
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:18px;
+    }
 
-/* ---------- HEADER ---------- */
-.header h2 {
-  margin: 0;
-  font-size: 22px;
-}
+    @media (max-width: 900px){
+      .app{grid-template-columns:1fr; gap:16px;}
+    }
 
-.header p {
-  margin: 6px 0 0;
-  font-size: 14px;
-  opacity: 0.85;
-}
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:18px;
+      overflow:hidden;
+    }
 
-/* ---------- CARD GRID ---------- */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
-  margin-top: 22px;
-}
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
 
-.card-btn {
-  background: linear-gradient(180deg, #fffdf8, #f3e3cf);
-  border-radius: 16px;
-  padding: 16px 0;
-  cursor: pointer;
-  font-size: 15px;
-  box-shadow:
-    0 6px 12px rgba(0,0,0,0.12),
-    inset 0 0 6px rgba(255,255,255,0.7);
-  transition: transform .25s ease, box-shadow .25s ease;
-  user-select: none;
-}
+    .brand .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
 
-.card-btn:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 10px 18px rgba(0,0,0,0.18);
-}
+    .dot{
+      width:14px;height:14px;border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, #fff, rgba(255,255,255,.2) 35%, transparent 60%),
+                  linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 0 6px rgba(255,79,216,.10);
+    }
 
-.card-btn:active {
-  transform: scale(0.96);
-}
+    h1{
+      font-size:18px;
+      margin:0;
+      letter-spacing:.2px;
+    }
 
-/* ---------- RESULT ---------- */
-.hidden { display: none; }
+    .sub{
+      margin:0;
+      font-size:13px;
+      color:var(--muted);
+    }
 
-.result-title {
-  font-size: 18px;
-  margin-top: 10px;
-}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap:10px;
+      margin-top:12px;
+    }
 
-.result-sub {
-  font-size: 14px;
-  margin-top: 6px;
-  opacity: 0.75;
-}
+    @media (max-width: 900px){
+      .grid{grid-template-columns: repeat(6, 1fr);}
+    }
+    @media (max-width: 560px){
+      .grid{grid-template-columns: repeat(5, 1fr);}
+    }
 
-.result-box {
-  margin-top: 14px;
-  padding: 22px;
-  background: linear-gradient(180deg, #ffffff, #fff3e4);
-  border-radius: 22px;
-  font-size: 16px;
-  line-height: 1.7;
-  box-shadow:
-    0 10px 24px rgba(0,0,0,0.18),
-    inset 0 0 12px rgba(255,255,255,0.85);
-  animation: fadeUp .6s ease;
-}
+    .cardBtn{
+      aspect-ratio: 1 / 1;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      color:#fff;
+      cursor:pointer;
+      transition: transform .08s ease, border-color .12s ease, background .12s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .cardBtn:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.26);
+      background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.04));
+    }
+    .cardBtn:active{transform: translateY(0px) scale(.98);}
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+    .cardBtn .num{
+      position:absolute;
+      inset:auto 10px 10px auto;
+      font-size:12px;
+      color:rgba(255,255,255,.65);
+    }
+    .cardBtn .icon{
+      position:absolute;
+      inset:12px auto auto 12px;
+      width:28px;height:28px;border-radius:12px;
+      background: linear-gradient(135deg, rgba(255,79,216,.35), rgba(124,77,255,.35));
+      border:1px solid rgba(255,255,255,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:16px;
+    }
 
-/* ตัวละคร */
-.mascot {
-  margin-top: 18px;
-  font-size: 42px;
-  animation: float 4s ease-in-out infinite;
-}
+    .resultWrap{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
 
-@keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0); }
-}
+    .resultCard{
+      border-radius: 26px;
+      background:
+        radial-gradient(600px 380px at 20% 20%, rgba(255,79,216,.22), transparent 55%),
+        radial-gradient(600px 380px at 80% 10%, rgba(124,77,255,.22), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 70px rgba(0,0,0,.38);
+      padding:18px;
+      min-height: 340px;
+      position:relative;
+      overflow:hidden;
+    }
 
-/* ตัวตกแต่งล่าง */
-.little-characters {
-  position: fixed;
-  bottom: 12px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 26px;
-  pointer-events: none;
-  opacity: 0.8;
-}
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.20);
+      color: rgba(255,255,255,.86);
+      font-size:12px;
+      margin-bottom:12px;
+    }
 
-.little-characters span {
-  font-size: 20px;
-  animation: wiggle 3.5s ease-in-out infinite;
-}
+    .title{
+      font-size:18px;
+      margin:0 0 10px 0;
+      letter-spacing:.2px;
+    }
 
-.little-characters span:nth-child(2) { animation-delay: .6s; }
-.little-characters span:nth-child(3) { animation-delay: 1.2s; }
-.little-characters span:nth-child(4) { animation-delay: 1.8s; }
+    .prediction{
+      font-size:22px;
+      line-height:1.35;
+      font-weight:800;
+      margin:0;
+    }
 
-@keyframes wiggle {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
+    .hint{
+      margin:12px 0 0 0;
+      font-size:13px;
+      color:var(--muted);
+    }
 
-.back {
-  margin-top: 16px;
-  font-size: 14px;
-  cursor: pointer;
-  opacity: 0.75;
-  user-select: none;
-}
+    .footerTag{
+      position:absolute;
+      inset:auto 18px 16px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      color:rgba(255,255,255,.55);
+      font-size:12px;
+    }
 
-/* ---------- SAVE BUTTON ---------- */
-.save-row {
-  margin-top: 14px;
-}
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
 
-.btn {
-  border: none;
-  cursor: pointer;
-  border-radius: 16px;
-  padding: 12px 12px;
-  font-family: "Prompt", sans-serif;
-  font-size: 14px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.14);
-  transition: transform .18s ease;
-  width: 100%;
-  user-select: none;
-}
+    button.action{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:#fff;
+      border-radius: 16px;
+      padding:12px 14px;
+      cursor:pointer;
+      font-weight:700;
+      transition: transform .08s ease, border-color .12s ease, background .12s ease;
+    }
+    button.action:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.24);
+      background: rgba(255,255,255,.09);
+    }
+    button.action:active{transform: translateY(0px) scale(.99);}
 
-.btn:active { transform: scale(0.98); }
+    button.primary{
+      background: linear-gradient(135deg, rgba(255,79,216,.85), rgba(124,77,255,.85));
+      border-color: rgba(255,255,255,.22);
+    }
 
-.btn-primary {
-  background: linear-gradient(180deg, #ffe2c4, #ffd3a3);
-  color: #5b3a28;
-}
+    .small{
+      font-size:12px;
+      color:var(--muted2);
+      margin:0;
+    }
 
-.hint {
-  margin-top: 10px;
-  font-size: 12px;
-  opacity: 0.7;
-  line-height: 1.5;
-}
-</style>
+    .hidden{display:none !important;}
+  </style>
 </head>
 
 <body>
+  <div class="app">
 
-<div class="little-characters">
-  <span>🐥</span>
-  <span>💗</span>
-  <span>✨</span>
-  <span>🔮</span>
-</div>
+    <!-- LEFT: เลือกการ์ด -->
+    <section class="panel" id="pickerPanel">
+      <div class="brand">
+        <div class="logo">
+          <div class="dot"></div>
+          <div>
+            <h1>HUBHUG</h1>
+            <p class="sub">เลือกการ์ด หรือสแกน QR เพื่อเปิดคำทำนายเฉพาะใบ</p>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="sub">ทั้งหมด 30 ใบ</div>
+        </div>
+      </div>
 
-<div class="container">
+      <div class="grid" id="cardGrid"></div>
 
-  <!-- หน้าเลือกการ์ด -->
-  <div id="selectPage">
-    <div class="header">
-      <h2>✨ ปิงปิองเสี่ยงฮัก 💘</h2>
-      <p>HUBHUG 💗</p>
-    </div>
+      <p class="small" style="margin-top:14px;">
+        ถ้าคุณเข้าผ่าน QR ระบบจะเปิดคำทำนายให้ทันทีโดยอัตโนมัติ
+      </p>
+    </section>
 
-    <div class="grid" id="cardGrid"></div>
+    <!-- RIGHT: ผลลัพธ์ -->
+    <section class="panel">
+      <div class="resultWrap">
+        <div class="resultCard" id="captureArea">
+          <div class="badge" id="badge">
+            🔮 คำทำนายของคุณ
+          </div>
+
+          <h2 class="title" id="resultTitle">ยังไม่ได้เลือกการ์ด</h2>
+          <p class="prediction" id="predictionText">เลือกการ์ดทางซ้าย หรือสแกน QR Code</p>
+
+          <p class="hint" id="hintText">
+            กด “เซฟเป็นรูป” เพื่อแชร์ลง IG Story / TikTok / LINE ได้เลย
+          </p>
+
+          <div class="footerTag">
+            <span id="footerLeft">HUBHUG • QR Fortune</span>
+            <span id="footerRight">#HUBHUG</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="action primary" id="saveBtn">📸 เซฟเป็นรูป</button>
+          <button class="action" id="copyLinkBtn">🔗 คัดลอกลิงก์ใบนี้</button>
+          <button class="action" id="randomBtn">🎲 สุ่มใหม่</button>
+          <button class="action" id="resetBtn">↩️ กลับหน้าเลือก</button>
+        </div>
+
+        <p class="small" id="statusText"></p>
+      </div>
+    </section>
+
   </div>
 
-  <!-- หน้าผลลัพธ์ -->
-  <div id="resultPage" class="hidden">
-    <div class="result-title" id="cardTitle"></div>
-    <div class="result-sub">คำทำนายจากน้องหมี</div>
+  <script>
+    // ====== ตั้งค่าคำทำนาย (ตอนนี้เป็น placeholder) ======
+    const predictions = Array.from({ length: 30 }, (_, i) => {
+      const n = String(i + 1).padStart(2, "0");
+      return `Prediction${n}`;
+    });
 
-    <div class="result-box" id="cardText"></div>
+    // ====== DOM ======
+    const cardGrid = document.getElementById("cardGrid");
+    const pickerPanel = document.getElementById("pickerPanel");
 
-    <div class="mascot">🔮🧸✨</div>
+    const resultTitle = document.getElementById("resultTitle");
+    const predictionText = document.getElementById("predictionText");
+    const statusText = document.getElementById("statusText");
 
-    <div class="save-row">
-      <button class="btn btn-primary" onclick="saveAsImage()">📷 เซฟเป็นรูป</button>
-    </div>
+    const saveBtn = document.getElementById("saveBtn");
+    const copyLinkBtn = document.getElementById("copyLinkBtn");
+    const randomBtn = document.getElementById("randomBtn");
+    const resetBtn = document.getElementById("resetBtn");
 
-    <div class="hint">
-      กดเพื่อดาวน์โหลดรูป แล้วเอาไปแชร์ต่อใน IG / TikTok / X ได้เลย ✨
-    </div>
+    const captureArea = document.getElementById("captureArea");
 
-    <div class="back" onclick="goBack()">← เลือกการ์ดใหม่</div>
-  </div>
+    // ====== Utilities ======
+    function clampId(id){
+      const n = Number(id);
+      if (!Number.isFinite(n)) return null;
+      if (n < 1 || n > 30) return null;
+      return n;
+    }
 
-</div>
+    function getIdFromURL(){
+      const url = new URL(window.location.href);
+      const id = url.searchParams.get("id");
+      return clampId(id);
+    }
 
-<script>
-/* ------------------------------
-   1) คำทำนาย 30 อัน (ชั่วคราว)
-   Prediction01 ... Prediction30
--------------------------------- */
-const predictions = Array.from({ length: 30 }, (_, i) => {
-  return "Prediction" + String(i + 1).padStart(2, "0");
-});
+    function setURLId(id){
+      const url = new URL(window.location.href);
+      url.searchParams.set("id", String(id));
+      window.history.replaceState({}, "", url.toString());
+    }
 
-/* ------------------------------
-   2) สร้างปุ่ม 01-30
--------------------------------- */
-const grid = document.getElementById("cardGrid");
-for (let i = 1; i <= 30; i++) {
-  const div = document.createElement("div");
-  div.className = "card-btn";
-  div.innerText = String(i).padStart(2,'0');
-  div.onclick = () => openCard(i);
-  grid.appendChild(div);
-}
+    function clearURLId(){
+      const url = new URL(window.location.href);
+      url.searchParams.delete("id");
+      window.history.replaceState({}, "", url.toString());
+    }
 
-/* ------------------------------
-   3) เปิดการ์ด (กดเลือก)
--------------------------------- */
-function openCard(cardNumber) {
-  const index = cardNumber - 1;
-  showResult(index);
+    function currentShareURL(){
+      const url = new URL(window.location.href);
+      return url.toString();
+    }
 
-  // เปลี่ยน URL ให้เป็นแบบ ?id=...
-  const url = new URL(window.location.href);
-  url.searchParams.set("id", String(cardNumber));
-  history.replaceState({}, "", url.toString());
-}
+    function showStatus(msg){
+      statusText.textContent = msg || "";
+    }
 
-/* ------------------------------
-   4) โชว์ผลลัพธ์
--------------------------------- */
-let currentIndex = 0;
-
-function showResult(index) {
-  currentIndex = index;
-
-  document.getElementById("selectPage").classList.add("hidden");
-  document.getElementById("resultPage").classList.remove("hidden");
-
-  document.getElementById("cardTitle").innerText =
-    "คำทำนายที่ " + (index + 1);
-
-  document.getElementById("cardText").innerText = predictions[index];
-}
-
-/* ------------------------------
-   5) กลับหน้าเลือกการ์ด
--------------------------------- */
-function goBack() {
-  document.getElementById("resultPage").classList.add("hidden");
-  document.getElementById("selectPage").classList.remove("hidden");
-
-  const url = new URL(window.location.href);
-  url.searchParams.delete("id");
-  history.replaceState({}, "", url.toString());
-}
-
-/* ------------------------------
-   6) เข้าเว็บผ่าน QR: ถ้ามี ?id= ให้โชว์ทันที
--------------------------------- */
-(function autoOpenFromQR() {
-  const url = new URL(window.location.href);
-  const id = url.searchParams.get("id");
-  if (!id) return;
-
-  const num = parseInt(id, 10);
-  if (Number.isNaN(num)) return;
-  if (num < 1 || num > 30) return;
-
-  showResult(num - 1);
-})();
-
-/* ------------------------------
-   7) เซฟเป็นรูป (ดาวน์โหลด PNG)
-   ขนาด 1080x1920 เหมาะกับ IG Story
--------------------------------- */
-function saveAsImage() {
-  const title = "คำทำนายที่ " + (currentIndex + 1);
-  const text = predictions[currentIndex];
-
-  const canvas = document.createElement("canvas");
-  canvas.width = 1080;
-  canvas.height = 1920;
-
-  const ctx = canvas.getContext("2d");
-
-  // พื้นหลัง
-  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  grad.addColorStop(0, "#fff7ea");
-  grad.addColorStop(1, "#f1dfc8");
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // กล่องข้อความ
-  const boxX = 90;
-  const boxY = 420;
-  const boxW = canvas.width - 180;
-  const boxH = 920;
-  const radius = 50;
-
-  roundRect(ctx, boxX, boxY, boxW, boxH, radius);
-  ctx.fillStyle = "#ffffff";
-  ctx.globalAlpha = 0.92;
-  ctx.fill();
-  ctx.globalAlpha = 1;
-
-  // หัวข้อ
-  ctx.fillStyle = "#5b3a28";
-  ctx.font = "bold 54px Prompt, sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText(title, canvas.width / 2, 300);
-
-  // subtitle
-  ctx.font = "32px Prompt, sans-serif";
-  ctx.globalAlpha = 0.75;
-  ctx.fillText("HUBHUG 💗", canvas.width / 2, 360);
-  ctx.globalAlpha = 1;
-
-  // เนื้อหา
-  ctx.font = "44px Prompt, sans-serif";
-  ctx.textAlign = "left";
-
-  const lines = wrapTextSmart(ctx, text, boxW - 120);
-  let y = boxY + 140;
-
-  for (const line of lines) {
-    ctx.fillText(line, boxX + 60, y);
-    y += 72;
-  }
-
-  // มาสคอต
-  ctx.textAlign = "center";
-  ctx.font = "90px Prompt, sans-serif";
-  ctx.fillText("🔮🧸✨", canvas.width / 2, boxY + boxH + 170);
-
-  // ลายน้ำล่าง
-  ctx.font = "30px Prompt, sans-serif";
-  ctx.globalAlpha = 0.7;
-  ctx.fillText("nksjunior.github.io/HUBHUG", canvas.width / 2, 1780);
-  ctx.globalAlpha = 1;
-
-  // ดาวน์โหลด
-  const a = document.createElement("a");
-  a.download = `HUBHUG_${String(currentIndex + 1).padStart(2, "0")}.png`;
-  a.href = canvas.toDataURL("image/png");
-  a.click();
-}
-
-/* wrap ข้อความแบบไม่พังภาษาไทยมาก */
-function wrapTextSmart(ctx, text, maxWidth) {
-  // ถ้ามีเว้นวรรค ใช้แบบ word wrap
-  if (text.includes(" ")) {
-    const words = text.split(" ");
-    const lines = [];
-    let line = "";
-
-    for (const w of words) {
-      const testLine = line ? line + " " + w : w;
-      if (ctx.measureText(testLine).width > maxWidth && line) {
-        lines.push(line);
-        line = w;
-      } else {
-        line = testLine;
+    // ====== Analytics helper ======
+    function trackPredictionView(id){
+      // page_view จะถูกส่งโดย GA4 อัตโนมัติอยู่แล้ว
+      // แต่เราส่ง event เพิ่ม เพื่อทำ report แยกตาม id ได้ง่าย
+      if (typeof gtag === "function"){
+        gtag("event", "prediction_view", {
+          prediction_id: id,
+          page_path: `/HUBHUG/?id=${id}`
+        });
       }
     }
-    if (line) lines.push(line);
-    return lines;
-  }
 
-  // fallback: ตัดทีละตัวอักษร
-  const chars = [...text];
-  const lines = [];
-  let line = "";
-
-  for (const ch of chars) {
-    const testLine = line + ch;
-    if (ctx.measureText(testLine).width > maxWidth && line) {
-      lines.push(line);
-      line = ch;
-    } else {
-      line = testLine;
+    function trackAction(actionName, id){
+      if (typeof gtag === "function"){
+        gtag("event", actionName, {
+          prediction_id: id ?? null
+        });
+      }
     }
-  }
-  if (line) lines.push(line);
-  return lines;
-}
 
-function roundRect(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-}
-</script>
+    // ====== Render card grid ======
+    function renderCards(){
+      cardGrid.innerHTML = "";
+      for (let i = 1; i <= 30; i++){
+        const btn = document.createElement("button");
+        btn.className = "cardBtn";
+        btn.type = "button";
+        btn.setAttribute("aria-label", `การ์ดใบที่ ${i}`);
 
+        btn.innerHTML = `
+          <div class="icon">✨</div>
+          <div class="num">#${String(i).padStart(2, "0")}</div>
+        `;
+
+        btn.addEventListener("click", () => openPrediction(i, true));
+        cardGrid.appendChild(btn);
+      }
+    }
+
+    // ====== Main: open prediction ======
+    let activeId = null;
+
+    function openPrediction(id, userClick=false){
+      const safeId = clampId(id);
+      if (!safeId) return;
+
+      activeId = safeId;
+      const text = predictions[safeId - 1];
+
+      resultTitle.textContent = `คำทำนายใบที่ ${String(safeId).padStart(2, "0")}`;
+      predictionText.textContent = text;
+
+      // set URL for QR/link
+      setURLId(safeId);
+
+      // ซ่อน panel เลือกการ์ดบนมือถือเพื่อให้เห็นผลชัด ๆ
+      if (window.innerWidth <= 900){
+        pickerPanel.classList.add("hidden");
+      }
+
+      // Analytics
+      trackPredictionView(safeId);
+      if (userClick) trackAction("pick_card", safeId);
+
+      showStatus("");
+    }
+
+    function resetToPicker(){
+      activeId = null;
+      clearURLId();
+
+      resultTitle.textContent = "ยังไม่ได้เลือกการ์ด";
+      predictionText.textContent = "เลือกการ์ดทางซ้าย หรือสแกน QR Code";
+      pickerPanel.classList.remove("hidden");
+
+      trackAction("reset_to_picker", null);
+      showStatus("");
+    }
+
+    // ====== Save as image ======
+    async function saveAsImage(){
+      if (!activeId){
+        showStatus("ยังไม่มีคำทำนายให้เซฟ กรุณาเลือกการ์ดก่อน");
+        return;
+      }
+
+      showStatus("กำลังสร้างรูป...");
+
+      try{
+        // ปรับให้ได้รูปคม ๆ
+        const canvas = await html2canvas(captureArea, {
+          backgroundColor: null,
+          scale: 2,
+          useCORS: true
+        });
+
+        const dataURL = canvas.toDataURL("image/png");
+        const a = document.createElement("a");
+        a.href = dataURL;
+        a.download = `HUBHUG_Prediction_${String(activeId).padStart(2, "0")}.png`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        trackAction("save_image", activeId);
+        showStatus("เซฟรูปเรียบร้อย ✅");
+      }catch(err){
+        console.error(err);
+        showStatus("เซฟรูปไม่สำเร็จ ลองใหม่อีกครั้ง");
+      }
+    }
+
+    // ====== Copy link ======
+    async function copyLink(){
+      if (!activeId){
+        showStatus("ยังไม่มีลิงก์เฉพาะใบ กรุณาเลือกการ์ดก่อน");
+        return;
+      }
+
+      try{
+        await navigator.clipboard.writeText(currentShareURL());
+        trackAction("copy_link", activeId);
+        showStatus("คัดลอกลิงก์แล้ว ✅");
+      }catch{
+        showStatus("คัดลอกไม่ได้ (เบราว์เซอร์ไม่รองรับ)");
+      }
+    }
+
+    // ====== Random ======
+    function randomPick(){
+      const id = Math.floor(Math.random() * 30) + 1;
+      openPrediction(id, true);
+      trackAction("random_pick", id);
+    }
+
+    // ====== Bind events ======
+    saveBtn.addEventListener("click", saveAsImage);
+    copyLinkBtn.addEventListener("click", copyLink);
+    randomBtn.addEventListener("click", randomPick);
+    resetBtn.addEventListener("click", resetToPicker);
+
+    // ====== Init ======
+    renderCards();
+
+    // ถ้ามี id ใน URL (สแกน QR มา) ให้เปิดทันที
+    const idFromURL = getIdFromURL();
+    if (idFromURL){
+      openPrediction(idFromURL, false);
+    }else{
+      resetToPicker();
+    }
+  </script>
 </body>
 </html>
