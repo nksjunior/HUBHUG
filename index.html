@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>HUBHUG</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
@@ -78,6 +78,7 @@ body::after {
     0 6px 12px rgba(0,0,0,0.12),
     inset 0 0 6px rgba(255,255,255,0.7);
   transition: transform .25s ease, box-shadow .25s ease;
+  user-select: none;
 }
 
 .card-btn:hover {
@@ -161,10 +162,43 @@ body::after {
 }
 
 .back {
-  margin-top: 22px;
+  margin-top: 16px;
   font-size: 14px;
   cursor: pointer;
   opacity: 0.75;
+  user-select: none;
+}
+
+/* ---------- SAVE BUTTON ---------- */
+.save-row {
+  margin-top: 14px;
+}
+
+.btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 16px;
+  padding: 12px 12px;
+  font-family: "Prompt", sans-serif;
+  font-size: 14px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.14);
+  transition: transform .18s ease;
+  width: 100%;
+  user-select: none;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: linear-gradient(180deg, #ffe2c4, #ffd3a3);
+  color: #5b3a28;
+}
+
+.hint {
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.7;
+  line-height: 1.5;
 }
 </style>
 </head>
@@ -187,17 +221,7 @@ body::after {
       <p>HUBHUG 💗</p>
     </div>
 
-    <div class="grid">
-      <script>
-        for (let i = 1; i <= 30; i++) {
-          document.write(`
-            <div class="card-btn" onclick="showResult(${i-1})">
-              ${String(i).padStart(2,'0')}
-            </div>
-          `);
-        }
-      </script>
-    </div>
+    <div class="grid" id="cardGrid"></div>
   </div>
 
   <!-- หน้าผลลัพธ์ -->
@@ -209,56 +233,220 @@ body::after {
 
     <div class="mascot">🔮🧸✨</div>
 
+    <div class="save-row">
+      <button class="btn btn-primary" onclick="saveAsImage()">📷 เซฟเป็นรูป</button>
+    </div>
+
+    <div class="hint">
+      กดเพื่อดาวน์โหลดรูป แล้วเอาไปแชร์ต่อใน IG / TikTok / X ได้เลย ✨
+    </div>
+
     <div class="back" onclick="goBack()">← เลือกการ์ดใหม่</div>
   </div>
 
 </div>
 
 <script>
-const predictions = [
-"โสดแบบตะโกน! โสดโปรไฟล์ดี มีคุณภาพ... แค่ยังไม่มีใครกล้าเข้ามาจีบเฉยๆ",
-"ประธานชมรมเฟรนด์โซน ตำแหน่งนี้เหนียวแน่นมาก... เป็นเพื่อนที่ดีที่สุดของเขาต่อไปนะ สู้ๆ",
-"เนื้อคู่กำลังเดินทาง... แต่น่าจะแวะกินหมูกระทะอยู่ เลยมาช้าหน่อย ใจเย็นๆ",
-"ดวงความรักพุ่งปรี๊ด! พุ่งไปไหนไม่รู้... แต่ที่รู้ๆ วันนี้เราน่ารักมาก",
-"ระวังคนมีเจ้าของ เช็คประวัติให้ดีๆ ก่อน... เดี๋ยวจะกลายเป็นผู้ประสบภัยทางความรักโดยไม่รู้ตัว",
-"เงินมาก่อน ความรักมาทีหลัง ช่วงนี้ดวงการเงินเด่นกว่า... รวยแล้วเดี๋ยวแฟนก็มาเองแหละ (มั้ง)",
-"ความสัมพันธ์แบบ Wifi เดี๋ยวดี เดี๋ยวหลุด... หาสัญญาณที่เสถียรๆ หน่อยนะ",
-"เขาเห็นเราเป็น \"น้อง\" น้องที่แปลว่า... น้องจริงๆ อ่ะ ไม่ได้คิดอะไรเกินเลย พักผ่อนนะ",
-"สเปกสูงเท่าดอยสุเทพ ลองลดสเปกลงมาสักนิด... คนน่ารักๆ รออยู่เพียบเลยนะรู้เปล่า",
-"รักแท้แพ้ของอร่อย นาทีนี้... ชานมไข่มุกสำคัญกว่าผู้ชาย/ผู้หญิง เชื่อสิ",
-"คุยเยอะจนเมื่อยนิ้ว แต่สถานะยังนิ่งสนิท... เหมือนรูปปั้นหน้ามอเลย",
-"มีเสน่ห์แรงมาก แรงจนคนนึกว่ามีองค์... ไม่มีใครกล้าเข้าใกล้เลยทีเดียว",
-"อย่าหาทำ (กลับไปคุยคนเก่า) หนังสือเล่มเดิม ตอนจบมันก็เจ็บเหมือนเดิม... มูฟออนเถอะจ้ะ",
-"ดวงดี... เหมาะกับการนอน วันนี้ดวงเหมาะกับการพักผ่อนอยู่ห้อง... ไม่ต้องออกไปเจอเรื่องวุ่นวายหรอก",
-"เทวดากำลังคัดกรอง ที่ยังโสดเพราะเบื้องบนกำลังเลือกคนที่ดีที่สุดให้อยู่... รอนานนิดนึงนะ ของดีมีน้อย",
-"คู่แข่งเยอะนะเรา แต่ไม่ต้องกลัว... เพราะเรามีความมั่นหน้าเป็นอาวุธ ชนะใสๆ!",
-"ความรักคือการลงทุน (ลงทุนซื้อข้าวกิน)... เปย์ตัวเองมีความสุขที่สุดแล้ว",
-"เขาไม่ได้หายไปไหน เขาอาจจะแค่... แบตหมด เน็ตตัด หรือหลับลึกไป 3 วันเฉยๆ (มองโลกในแง่ดีสุดๆ)",
-"โฟกัสเรื่องเรียนก่อน (ข้ออ้างยอดฮิต)... จริงๆ คือยังไม่มีใครเอา แต่พูดแบบนี้แล้วดูฉลาดดี",
-"พรหมลิขิตทำงานหนักมาก แต่ระบบน่าจะขัดข้องอยู่... รอรีสตาร์ทแป๊บนึงนะ เดี๋ยวคู่ก็มา",
-"ลองเปลี่ยนบรรยากาศ ออกไปเดินเล่นที่ใหม่ๆ บ้าง... เผื่อจะเจอคนหน้าใหม่ๆ (ที่ไม่ใช่หน้าเดิมๆ ในกระจก)",
-"ส่องเก่ง! ส่องไอจีเขาจนตาแฉะ เขาก็ไม่รู้ตัวหรอก... ลองทักไปสักนิดเถอะ",
-"ความสุขอยู่รอบตัว เช่น เงินในกระเป๋า และของกินในตู้เย็น... แค่นี้ก็ฟินแล้ว",
-"ใจเย็นๆ ของดีต้องรอหน่อย ช้าๆ ได้พร้าเล่มงาม... (แต่งามช้าไปนิดนึงนะ)",
-"ระวังตกหลุมรัก... ตัวเอง วันนี้แต่งตัวสวย/หล่อเป็นพิเศษ... ระวังหลงตัวเองจนหาทางออกไม่เจอนะ",
-"สถานะ: กำลังพิจารณา มีคนเข้ามาให้เลือกเยอะ (ในจินตนาการ)... กำลังคัดเลือกผู้เข้ารอบอยู่จ้า",
-"รักน้ำ รักปลา รักซากุระ รักธรรมชาติ รักสิ่งแวดล้อม... แล้วเมื่อไหร่จะมีคนมารักเราบ้างน้า?",
-"ดวงเหมาะกับการเสี่ยงโชค พักเรื่องรัก แล้วไปลุ้นเลขเด็ดงวดนี้ดีกว่า... มีแววรวย!",
-"ยิ้มเข้าไว้ เดี๋ยวดีเอง ยิ้มสู้กับทุกปัญหา... ถึงไม่มีแฟน แต่เราก็มีรอยยิ้มที่สดใสนะ",
-"คุณคือผู้โชคดี! โชคดีที่หยิบได้ใบนี้... เพราะมันไม่มีคำทำนายร้ายๆ เลย เย้! (จอยๆ นะ)"
-];
+/* ------------------------------
+   1) คำทำนาย 30 อัน (ชั่วคราว)
+   Prediction01 ... Prediction30
+-------------------------------- */
+const predictions = Array.from({ length: 30 }, (_, i) => {
+  return "Prediction" + String(i + 1).padStart(2, "0");
+});
+
+/* ------------------------------
+   2) สร้างปุ่ม 01-30
+-------------------------------- */
+const grid = document.getElementById("cardGrid");
+for (let i = 1; i <= 30; i++) {
+  const div = document.createElement("div");
+  div.className = "card-btn";
+  div.innerText = String(i).padStart(2,'0');
+  div.onclick = () => openCard(i);
+  grid.appendChild(div);
+}
+
+/* ------------------------------
+   3) เปิดการ์ด (กดเลือก)
+-------------------------------- */
+function openCard(cardNumber) {
+  const index = cardNumber - 1;
+  showResult(index);
+
+  // เปลี่ยน URL ให้เป็นแบบ ?id=...
+  const url = new URL(window.location.href);
+  url.searchParams.set("id", String(cardNumber));
+  history.replaceState({}, "", url.toString());
+}
+
+/* ------------------------------
+   4) โชว์ผลลัพธ์
+-------------------------------- */
+let currentIndex = 0;
 
 function showResult(index) {
+  currentIndex = index;
+
   document.getElementById("selectPage").classList.add("hidden");
   document.getElementById("resultPage").classList.remove("hidden");
+
   document.getElementById("cardTitle").innerText =
     "คำทำนายที่ " + (index + 1);
+
   document.getElementById("cardText").innerText = predictions[index];
 }
 
+/* ------------------------------
+   5) กลับหน้าเลือกการ์ด
+-------------------------------- */
 function goBack() {
   document.getElementById("resultPage").classList.add("hidden");
   document.getElementById("selectPage").classList.remove("hidden");
+
+  const url = new URL(window.location.href);
+  url.searchParams.delete("id");
+  history.replaceState({}, "", url.toString());
+}
+
+/* ------------------------------
+   6) เข้าเว็บผ่าน QR: ถ้ามี ?id= ให้โชว์ทันที
+-------------------------------- */
+(function autoOpenFromQR() {
+  const url = new URL(window.location.href);
+  const id = url.searchParams.get("id");
+  if (!id) return;
+
+  const num = parseInt(id, 10);
+  if (Number.isNaN(num)) return;
+  if (num < 1 || num > 30) return;
+
+  showResult(num - 1);
+})();
+
+/* ------------------------------
+   7) เซฟเป็นรูป (ดาวน์โหลด PNG)
+   ขนาด 1080x1920 เหมาะกับ IG Story
+-------------------------------- */
+function saveAsImage() {
+  const title = "คำทำนายที่ " + (currentIndex + 1);
+  const text = predictions[currentIndex];
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 1080;
+  canvas.height = 1920;
+
+  const ctx = canvas.getContext("2d");
+
+  // พื้นหลัง
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grad.addColorStop(0, "#fff7ea");
+  grad.addColorStop(1, "#f1dfc8");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // กล่องข้อความ
+  const boxX = 90;
+  const boxY = 420;
+  const boxW = canvas.width - 180;
+  const boxH = 920;
+  const radius = 50;
+
+  roundRect(ctx, boxX, boxY, boxW, boxH, radius);
+  ctx.fillStyle = "#ffffff";
+  ctx.globalAlpha = 0.92;
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // หัวข้อ
+  ctx.fillStyle = "#5b3a28";
+  ctx.font = "bold 54px Prompt, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(title, canvas.width / 2, 300);
+
+  // subtitle
+  ctx.font = "32px Prompt, sans-serif";
+  ctx.globalAlpha = 0.75;
+  ctx.fillText("HUBHUG 💗", canvas.width / 2, 360);
+  ctx.globalAlpha = 1;
+
+  // เนื้อหา
+  ctx.font = "44px Prompt, sans-serif";
+  ctx.textAlign = "left";
+
+  const lines = wrapTextSmart(ctx, text, boxW - 120);
+  let y = boxY + 140;
+
+  for (const line of lines) {
+    ctx.fillText(line, boxX + 60, y);
+    y += 72;
+  }
+
+  // มาสคอต
+  ctx.textAlign = "center";
+  ctx.font = "90px Prompt, sans-serif";
+  ctx.fillText("🔮🧸✨", canvas.width / 2, boxY + boxH + 170);
+
+  // ลายน้ำล่าง
+  ctx.font = "30px Prompt, sans-serif";
+  ctx.globalAlpha = 0.7;
+  ctx.fillText("nksjunior.github.io/HUBHUG", canvas.width / 2, 1780);
+  ctx.globalAlpha = 1;
+
+  // ดาวน์โหลด
+  const a = document.createElement("a");
+  a.download = `HUBHUG_${String(currentIndex + 1).padStart(2, "0")}.png`;
+  a.href = canvas.toDataURL("image/png");
+  a.click();
+}
+
+/* wrap ข้อความแบบไม่พังภาษาไทยมาก */
+function wrapTextSmart(ctx, text, maxWidth) {
+  // ถ้ามีเว้นวรรค ใช้แบบ word wrap
+  if (text.includes(" ")) {
+    const words = text.split(" ");
+    const lines = [];
+    let line = "";
+
+    for (const w of words) {
+      const testLine = line ? line + " " + w : w;
+      if (ctx.measureText(testLine).width > maxWidth && line) {
+        lines.push(line);
+        line = w;
+      } else {
+        line = testLine;
+      }
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  // fallback: ตัดทีละตัวอักษร
+  const chars = [...text];
+  const lines = [];
+  let line = "";
+
+  for (const ch of chars) {
+    const testLine = line + ch;
+    if (ctx.measureText(testLine).width > maxWidth && line) {
+      lines.push(line);
+      line = ch;
+    } else {
+      line = testLine;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
 }
 </script>
 
